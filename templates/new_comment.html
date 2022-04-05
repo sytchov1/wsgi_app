@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Новый комментарий</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        #add_comment {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 500px;
+            border: 1px solid gray;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+        .bad-data {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <form id='add_comment' method="post" action="" onsubmit="return validateForm()">
+        <div>Фамилия: <input type="text" name="surname" placeholder='Иванов'></div>
+        <div>Имя: <input type="text" name="name" placeholder='Иван'></div>
+        <div>Отчество: <input type="text" name="patronymic" placeholder='Иванович'></div>
+        <div>Регион:
+            <select id="region" name="region" onchange="getCities(this.value)">
+                <option value=0>Выбрать</option>%(regions)s
+            </select>
+        </div>
+        <div>Город:
+            <select id="city" name="city">
+                <option value=0>Выбрать</option>
+            </select>
+        </div>
+        <div>Телефон: +7<input name="phone" placeholder="(928) 3535888"></div>
+        <div>E-mail: <input name="email" placeholder="email@mail.ru"></div>
+        <textarea name="content" placeholder="Текст комментария"></textarea>
+        <input type="submit" value="Добавить">
+    </form>
+
+    <script>
+        function getCities(region) {
+            if (region == '0') {
+                document.getElementById('city').innerHTML = '<option value=0>Выбрать</option>'
+            }
+            else {
+                const request = new XMLHttpRequest();
+                url = 'ajax/get_cities?region=' + region;
+
+                request.onreadystatechange = function() {
+                    if (request.readyState == 4) {
+                        if (request.status == 200) {
+                            document.getElementById('city').innerHTML = request.responseText;
+                        }
+                        else {
+                            alert('Не удалось получить список городов');
+                        }
+                    }
+                }
+                request.open('GET', url, true);
+                request.send(null);
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const surname = document.getElementsByName('surname')[0];
+            const name = document.getElementsByName('name')[0];
+            const content = document.getElementsByName('content')[0];
+            const phone = document.getElementsByName('phone')[0];
+            const email = document.getElementsByName('email')[0];
+            if (surname.value == '') {
+                surname.classList.add("bad-data");
+                isValid = true;
+            }
+            else if (surname.classList.contains("bad-data")) {
+                surname.classList.remove("bad-data");
+            }
+            if (name.value == '') {
+                name.classList.add("bad-data");
+                isValid = false
+            }
+            else if (name.classList.contains("bad-data")) {
+                name.classList.remove("bad-data");
+            }
+            if (content.value == '') {
+                content.classList.add("bad-data");
+                isValid = false
+            }
+            else if (content.classList.contains("bad-data")) {
+                content.classList.remove("bad-data");
+            }
+            if (phone.value != '' && !/^\([\d]{3}\)\ [\d]{7}$/.test(phone.value)) {
+                phone.classList.add("bad-data");
+                isValid = false
+            }
+            else if (phone.classList.contains("bad-data")) {
+                phone.classList.remove("bad-data");
+            }
+            if (email.value != '' && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)) {
+                email.classList.add("bad-data");
+                isValid = false
+            }
+            else if (email.classList.contains("bad-data")) {
+                email.classList.remove("bad-data");
+            }
+            if (!isValid) {
+                alert('Проверьте правильность заполнения полей');
+            }
+            return isValid;
+        }
+    </script>
+</body>
+</html>

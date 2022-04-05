@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Комментарии</title>
+        <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 500px;
+            margin: 0 auto;
+        }
+        .title {
+            margin: 10px auto;
+        }
+        #comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .comment {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid green;
+            border-radius: 4px;
+        }
+        .com-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: gray;
+            color: white;
+        }
+        .del-btn {
+            color: white;
+            background-color: red;
+            padding: 4px 6px;
+            border: 1px solid white;
+            border-radius: 2px;
+        }
+        .com-content {
+            padding: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Комментарии:</h1>
+        <div id="comment-list">
+            %(comments)s
+        </div>
+    </div>
+
+    <script>
+        function deleteComment(id) {
+                const request = new XMLHttpRequest();
+                url = 'ajax/delete_comment?id=' + id;
+
+                request.onreadystatechange = function() {
+                    if (request.readyState == 4) {
+                        if (request.status == 200) {
+                            document.getElementById(id).remove();
+                        }
+                        alert(request.responseText);
+                    }
+                }
+                request.open('DELETE', url, true);
+                request.send(null);
+        }
+    </script>
+</body>
+</html>

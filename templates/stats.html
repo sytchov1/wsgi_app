@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Статистика</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            border: 1px solid green;
+            margin: 0 auto;
+        }
+        .item {
+            display: flex;
+            width: 500px;
+        }
+        .header {
+            border-bottom: 1px solid black;
+        }
+        .item a {
+            flex: 1 1 400px;
+            text-align: center;
+        }
+        .item span {
+            flex: 1 1 100px;
+            border-left: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul>
+            <li class="item"><a class="header">Регион</a><span class="header">Комментарии</span></li>
+            %(regions)s
+        </ul>
+    </div>
+</body>
+</html>
